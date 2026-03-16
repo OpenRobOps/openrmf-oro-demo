@@ -74,18 +74,18 @@ services:
       - ../mock_api_server/mock.json:/data/mock.json:ro
     command: ["-d", "/data/mock.json", "-p", "3000"]
 
-  inorbit_agent:
-    build:
-      context: ../inorbit
-      dockerfile: Dockerfile
-    container_name: "inorbit_agent"
-    privileged: true
-    ipc: host
-    pid: host       
-    network_mode: "host"
-    depends_on:
-      - "oro_fleet_adapter"
-    restart: "always"
-    volumes:
-      - ../inorbit/data:/root/.inorbit/local/
-      - ../inorbit/agent.env.sh:/root/.inorbit/local/agent.env.sh
+  # inorbit_agent:
+  #   build:
+  #     context: ../inorbit
+  #     dockerfile: Dockerfile
+  #   container_name: "inorbit_agent"
+  #   privileged: true
+  #   ipc: host
+  #   pid: host       
+  #   network_mode: "host"
+  #   depends_on:
+  #     - "oro_fleet_adapter"
+  #   restart: "always"
+  #   volumes:
+  #     - ../inorbit/data:/root/.inorbit/local/
+  #     - ../inorbit/agent.env.sh:/root/.inorbit/local/agent.env.sh

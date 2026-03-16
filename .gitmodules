@@ -1,0 +1,4 @@
+[submodule "openrmf-oro-adapter"]
+	path = openrmf-oro-adapter
+	url = git@github.com:OpenRobOps/openrmf-oro-adapter.git
+	branch = jazzy-dev
