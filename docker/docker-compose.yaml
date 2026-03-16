@@ -1,0 +1,91 @@
+version: "3.8"
+services:
+  oro_fleet_adapter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: andino_inorbit_rmf
+    hostname: oro_fleet_adapter
+    container_name: oro_fleet_adapter
+    network_mode: host
+    volumes:
+      - ..:${HOME}/ws/src/openrmf-oro-adapter:rw
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ../inorbit:${HOME}/.inorbit/local/:rw
+    tty: true
+    stdin_open: true
+    privileged: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu, graphics, display]
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_QPA_PLATFORM=xcb
+
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      # NOTE: Keep this COMMENTED OUT if you want to use the GPU.
+      # If the GPU fails, uncomment this to force CPU rendering as a fallback.
+      # - LIBGL_ALWAYS_SOFTWARE=1
+
+      - ROS_DOMAIN_ID=1
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
+      - CYCLONEDDS_URI=<CycloneDDS><Domain><Discovery><ParticipantIndex>auto</ParticipantIndex><MaxAutoParticipantIndex>200</MaxAutoParticipantIndex></Discovery><SharedMemory><Enable>false</Enable></SharedMemory></Domain></CycloneDDS>
+  
+  api_server:
+    image: ghcr.io/open-rmf/rmf-web/api-server:jazzy-nightly
+    hostname: open_rmf_api_server
+    container_name: open_rmf_api_server
+    network_mode: host
+    ports:
+      - "8000:8000"
+    environment:
+      - ROS_DOMAIN_ID=1
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+    tty: true
+    stdin_open: true
+  
+  dashboard:
+    image: ghcr.io/open-rmf/rmf-web/demo-dashboard:jazzy-nightly
+    hostname: open_rmf_dashboard
+    container_name: open_rmf_dashboard
+    network_mode: host
+    ports:
+      - "3000:3000"
+    environment:
+      - RMF_SERVER_URL=http://localhost:8000
+      - TRAJECTORY_SERVER_URL=ws://localhost:8006
+    tty: true
+    stdin_open: true
+
+  mock_api:
+    image: mockoon/cli:latest
+    container_name: robots-mock-api
+    ports:
+      - "3001:3000"
+    environment:
+      - TZ=America/Bogota
+    restart: unless-stopped
+    volumes:
+      - ../mock_api_server/mock.json:/data/mock.json:ro
+    command: ["-d", "/data/mock.json", "-p", "3000"]
+
+  inorbit_agent:
+    build:
+      context: ../inorbit
+      dockerfile: Dockerfile
+    container_name: "inorbit_agent"
+    privileged: true
+    ipc: host
+    pid: host       
+    network_mode: "host"
+    depends_on:
+      - "oro_fleet_adapter"
+    restart: "always"
+    volumes:
+      - ../inorbit/data:/root/.inorbit/local/
+      - ../inorbit/agent.env.sh:/root/.inorbit/local/agent.env.sh

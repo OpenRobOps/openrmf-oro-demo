@@ -1,0 +1,13 @@
+[Unit]
+Description=InOrbit Agent Service
+
+[Service]
+Type=simple
+User=santiagoek
+WorkingDirectory=/home/santiagoek/.inorbit/dist
+ExecStart=/home/santiagoek/.inorbit/dist/scripts/start.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

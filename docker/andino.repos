@@ -1,0 +1,10 @@
+repositories:
+  andino:
+    type: git
+    url: https://github.com/Ekumen-OS/andino.git
+    version: jazzy
+  
+  andino_gz:
+    type: git
+    url: https://github.com/daniel-lopez-puig/andino_gz.git
+    version: jazzy
