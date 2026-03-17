@@ -31,7 +31,9 @@ ros2 launch oro_fleet_adapter fleet.andino.sim.launch.xml
 Since the Inorbit is going to act as the fleet manager of an andino robot, it is important to have the agent up and running. You can install the agent using the command below. Once installed, you can start the agent using the command shown below.
 
 ```bash
-$HOME/.inorbit/local/install.sh
+curl -fsSL https://control.inorbit.ai/liftoff/mwZZ50wpoCOh33bM -o /tmp/installer.sh
+sed -i '/Press ENTER to resume installation or CTRL\+C to cancel\./d;/read -r input <\/dev\/tty/d' /tmp/installer.sh
+sh /tmp/installer.sh
 ```
 
 **Execute the command below to start the agent, (the agent has to be running after the simulation environment is launched leave this command running on a separate terminal, if the simulation is finished the agent will need to be restarted again so it can refresh the `/tf` topic subscriptions and avoid stale data issues):**
@@ -81,3 +83,35 @@ docker compose -f docker/docker-compose.yaml up -d
 ```
 
 And open a web browser and navigate to `http://localhost:3000/robots` to access the RMF web interface and see the robot in action.
+
+## Pre-commit hooks
+
+
+Pre-commit is a tool that allows git's pre-commit hook integrate with various code linters and formatters.
+
+To install `pre-commit`, run
+```sh
+pip install pre-commit
+```
+
+To automatically run it on each commit, from repository's root:
+```sh
+pre-commit install
+```
+
+And that's it! Every time you commit, `pre-commit` will trigger and let you know if everything goes well.
+If the checks fail, the commit won't be created, and you'll have to fix the issue (some of them are automatically fixed by `pre-commit`), STAGE the changes, and try again.
+
+To manually run `pre-commit` on the staged changes, one can run:
+```sh
+pre-commit run
+```
+
+Or to change the whole codebase
+```sh
+pre-commit run --all-files
+```
+
+**Note**: `pre-commit` only runs on staged changes by default.
+
+**Note2**: To bypass `pre-commit`, use `git commit --no-verify`.

@@ -90,11 +90,13 @@ foreach(path ${traffic_editor_paths})
     DESTINATION share/${PROJECT_NAME}/maps
   )
 
+
   message(NOTICE "....Generating Lane Graphs in  ${output_nav_graphs_dir}...DONE")
 
 endforeach()
 
 install(DIRECTORY
   maps
+  rviz_config
   DESTINATION share/${PROJECT_NAME}
 )

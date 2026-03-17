@@ -30,20 +30,14 @@
 
 set -e
 
-# Set the user
-USER=$(whoami)
-
-export ROS_DOMAIN_ID=0
 # Source the environment
 source /opt/ros/jazzy/setup.bash
-source /home/$USER/ws/install/setup.bash
+source /rmf_demos_ws/install/setup.bash
+source /home/developer/ws/install/setup.bash
 
-# Launch the simulation with SLAM.
-# gzclient is not started.
-# RViz is not started.
-cd /home/$USER/ws/
+# ros2 launch oro_fleet_adapter fleet.andino.launch.xml \
+#   building_map_path:="/home/developer/ws/install/andino_rmf_maps/share/andino_rmf_maps/maps/andino_office/andino_office.building.yaml" \
+#   nav_graph_path:="/home/developer/ws/install/andino_rmf_maps/share/andino_rmf_maps/maps/andino_office/nav_graph/0.yaml"  \
+#   viz_config_file:="/home/developer/ws/install/andino_rmf_maps/share/andino_rmf_maps/rviz_config/office.rviz"
 
-# ros2 launch andino_bringup andino_robot.launch.py // real robot
-# ros2 launch andino_gz andino_gz.launch.py nav2:=True
-# ros2 launch andino_gz andino_gz.launch.py nav2:=True world_name:=office.sdf map:=office  && ros2 run battery_fake battery_fake
 tail -f /dev/null

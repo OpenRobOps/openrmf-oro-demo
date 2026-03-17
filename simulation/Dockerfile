@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1
-
 ARG ROS_DISTRO=jazzy
 
 ########################################
@@ -67,10 +65,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     ros-${ROS_DISTRO}-tf-transformations \
  && rm -rf /var/lib/apt/lists/*
 
-# Python deps from your repo
-COPY docker/requirements.txt /tmp/requirements.txt
-RUN pip install --break-system-packages -r /tmp/requirements.txt
-
 USER ${USER}
 
 
@@ -84,20 +78,19 @@ ARG USER=developer
 
 SHELL ["/bin/bash", "-c"]
 
-# Workspace layout
-RUN mkdir -p /home/${USER}/ws/src \
- && chown -R ${USER}:${USER} /home/${USER}/ws
+RUN sudo mkdir -p /andino_ws/src \
+ && sudo chown -R ${USER}:${USER} /andino_ws
 
-# ✅ IMPORTANT: run commands from the workspace root
-WORKDIR /home/${USER}/ws
+WORKDIR /andino_ws
 
-COPY docker/andino.repos /home/${USER}/ws/andino.repos
+# Copy repos file inside workspace
+COPY simulation/andino.repos /andino_ws/andino.repos
 
-# Import repos (now "src" exists relative to WORKDIR)
-RUN vcs validate < /home/${USER}/ws/andino.repos \
- && vcs import --input /home/${USER}/ws/andino.repos src
+# Import repositories
+RUN vcs validate < andino.repos \
+ && vcs import src < andino.repos
 
-# rosdep install
+# Install dependencies
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash \
  && if [ -f /rmf_demos_ws/install/setup.bash ]; then source /rmf_demos_ws/install/setup.bash; fi \
  && sudo apt-get update \
@@ -105,10 +98,12 @@ RUN source /opt/ros/${ROS_DISTRO}/setup.bash \
  && rosdep install -i -y --rosdistro ${ROS_DISTRO} --from-paths src --ignore-src --skip-keys="gz-sim8" \
  && sudo rm -rf /var/lib/apt/lists/*
 
-# Build Andino workspace (colcon expects src under current dir)
+# Build workspace
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash \
  && if [ -f /rmf_demos_ws/install/setup.bash ]; then source /rmf_demos_ws/install/setup.bash; fi \
- && colcon build --symlink-install --event-handlers console_direct+
+ && colcon build \
+      --symlink-install \
+      --event-handlers console_direct+
 
 RUN mkdir -p /home/${USER}/.inorbit/ \
  && chown -R ${USER}:${USER} /home/${USER}/.inorbit
@@ -123,7 +118,8 @@ ARG USER=developer
 
 SHELL ["/bin/bash", "-c"]
 
-# Entry point
-COPY docker/entrypoint.sh /entrypoint.sh
+WORKDIR /home/${USER}/ws
+
+COPY simulation/entrypoint.sh /entrypoint.sh
 RUN sudo chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]

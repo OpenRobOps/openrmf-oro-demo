@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="use_sim_time" default="true"/>
+  <include file="$(find-pkg-share andino_fleet)/launch/spawn_multiple_robot.launch.py">
+    <arg name="use_sim_time" value="$(var use_sim_time)"/>
+  </include>
+
+  <!-- Launch battery_fake node -->
+  <node pkg="battery_fake" exec="battery_fake" output="screen" />
+
+</launch>

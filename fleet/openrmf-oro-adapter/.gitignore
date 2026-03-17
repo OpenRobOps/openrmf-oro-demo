@@ -203,12 +203,10 @@ qtcreator-*
 COLCON_IGNORE
 AMENT_IGNORE
 
-# Inorbit files
-!inorbit/inorbit.service
-!inorbit/agent.sh
-!inorbit/install.sh
-!inorbit/user_scripts/
 inorbit/*
+!inorbit/inorbit.service
+!inorbit/agent.env.sh
+!inorbit/user_scripts/
 commands.txt
 
 # End of https://www.toptal.com/developers/gitignore/api/python,ros2
