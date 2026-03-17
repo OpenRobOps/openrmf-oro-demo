@@ -33,7 +33,6 @@ set -e
 # Source the environment
 source /opt/ros/jazzy/setup.bash
 source /rmf_demos_ws/install/setup.bash
-source /home/developer/ws/install/setup.bash
 
 colcon build
 source /home/developer/ws/install/setup.bash

@@ -1,4 +1,0 @@
-[submodule "fleet/openrmf-oro-adapter"]
-	path = fleet/openrmf-oro-adapter
-	url = git@github.com:OpenRobOps/openrmf-oro-adapter.git
-	branch = jazzy-dev

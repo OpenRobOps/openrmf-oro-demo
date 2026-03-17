@@ -81,3 +81,5 @@ docker compose -f docker/docker-compose.yaml up -d
 ```
 
 And open a web browser and navigate to `http://localhost:3000/robots` to access the RMF web interface and see the robot in action.
+
+DOCKER_BUILDKIT=1 docker compose build

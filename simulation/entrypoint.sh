@@ -35,7 +35,6 @@ USER=$(whoami)
 # Source the environment
 source /opt/ros/jazzy/setup.bash
 source /rmf_demos_ws/install/setup.bash
-source /andino_ws/install/setup.bash
 
 # Install InOrbit agent
 $HOME/.inorbit/local/install.sh || true

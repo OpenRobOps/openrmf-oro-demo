@@ -7,6 +7,8 @@ services:
     build:
       context: .
       dockerfile: ./fleet/Dockerfile
+      ssh:
+        - default
     hostname: oro_fleet_adapter
     container_name: oro_fleet_adapter
     network_mode: host
