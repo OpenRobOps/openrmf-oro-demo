@@ -204,11 +204,11 @@ COLCON_IGNORE
 AMENT_IGNORE
 
 # Inorbit files
-!inorbit/inorbit.service
-!inorbit/agent.sh
-!inorbit/install.sh
-!inorbit/user_scripts/
-inorbit/*
+simulation/inorbit/*
+simulation/!inorbit/inorbit.service
+simulation/!inorbit/agent.sh
+simulation/!inorbit/install.sh
+simulation/!inorbit/user_scripts/
 commands.txt
 
 # End of https://www.toptal.com/developers/gitignore/api/python,ros2

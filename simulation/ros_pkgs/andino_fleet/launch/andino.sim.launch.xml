@@ -9,4 +9,6 @@
   <!-- Launch battery_fake node -->
   <node pkg="battery_fake" exec="battery_fake" output="screen" />
 
+  <!-- Execute InOrbit agent start script -->
+  <executable cmd="$(env HOME)/.inorbit/dist/scripts/start.sh" output="screen" />
 </launch>

@@ -37,6 +37,12 @@ source /opt/ros/jazzy/setup.bash
 source /rmf_demos_ws/install/setup.bash
 source /andino_ws/install/setup.bash
 
-# ros2 launch andino_fleet andino.sim.launch.xml
+# Install InOrbit agent
+$HOME/.inorbit/local/install.sh || true
 
-tail -f /dev/null
+# Build the workspace and launch the simulation
+colcon build
+source install/setup.bash
+ros2 launch andino_fleet andino.sim.launch.xml
+
+# tail -f /dev/null
