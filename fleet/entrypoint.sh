@@ -34,11 +34,12 @@ set -e
 source /opt/ros/jazzy/setup.bash
 source /rmf_demos_ws/install/setup.bash
 
+# Keep the container running
+# tail -f /dev/null
+
 colcon build
 source /home/developer/ws/install/setup.bash
 ros2 launch oro_fleet_adapter fleet.andino.launch.xml \
   building_map_path:="/home/developer/ws/install/andino_rmf_maps/share/andino_rmf_maps/maps/andino_office/andino_office.building.yaml" \
   nav_graph_path:="/home/developer/ws/install/andino_rmf_maps/share/andino_rmf_maps/maps/andino_office/nav_graph/0.yaml"  \
   viz_config_file:="/home/developer/ws/install/andino_rmf_maps/share/andino_rmf_maps/rviz_config/office.rviz"
-
-# tail -f /dev/null
