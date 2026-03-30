@@ -2,7 +2,7 @@ repositories:
   andino:
     type: git
     url: https://github.com/Ekumen-OS/andino.git
-    version: jazzy
+    version: main
   
   andino_gz:
     type: git
