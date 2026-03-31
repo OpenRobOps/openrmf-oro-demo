@@ -7,5 +7,5 @@
     k_alpha: 0.8
     k_beta: -0.15
     k_rho: 0.3
-    use_sim_time: true
+    use_sim_time: false
     

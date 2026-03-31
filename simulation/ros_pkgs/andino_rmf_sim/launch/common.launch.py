@@ -28,7 +28,7 @@ def generate_launch_description():
     server_uri_arg = DeclareLaunchArgument('server_uri', default_value='', description='The URI of the api server to transmit state and task information.')
     
     use_sim_time = LaunchConfiguration('use_sim_time')
-    use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='true')
+    use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='false')
     
     # Traffic schedule
     traffic_schedule = Node(

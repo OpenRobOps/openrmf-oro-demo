@@ -22,7 +22,7 @@ def generate_launch_description():
         launch_arguments={'map_path': os.path.join(get_package_share_directory('andino_rmf_maps'), 'maps','andino_office', 'andino_office.building.yaml'),
                           'viz_config_file': os.path.join(get_package_share_directory('andino_rmf_sim'), 'rviz_config', 'office.rviz'),
                           'map_name': 'L1',
-                          'use_sim_time': 'true', 
+                          'use_sim_time': 'false', 
                           }.items()
     )
     

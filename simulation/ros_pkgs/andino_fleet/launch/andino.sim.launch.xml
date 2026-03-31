@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
-  <arg name="use_sim_time" default="true"/>
+  <arg name="use_sim_time" default="false"/>
   <include file="$(find-pkg-share andino_fleet)/launch/spawn_multiple_robot.launch.py">
     <arg name="use_sim_time" value="$(var use_sim_time)"/>
   </include>
@@ -10,5 +10,5 @@
   <node pkg="battery_fake" exec="battery_fake" output="screen" />
 
   <!-- Execute InOrbit agent start script -->
-  <executable cmd="$(env HOME)/.inorbit/dist/scripts/start.sh" output="screen" />
+  <!-- <executable cmd="$(env HOME)/.inorbit/dist/scripts/start.sh" output="screen" /> -->
 </launch>
