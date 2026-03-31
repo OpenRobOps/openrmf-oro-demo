@@ -76,7 +76,6 @@ services:
     network_mode: host
     volumes:
       - ./simulation/inorbit:${HOME}/.inorbit/local/:rw
-      - ./simulation/ros_pkgs:${HOME}/ws/src:rw
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
     tty: true
     stdin_open: true

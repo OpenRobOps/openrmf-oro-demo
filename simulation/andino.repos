@@ -8,3 +8,8 @@ repositories:
     type: git
     url: https://github.com/daniel-lopez-puig/andino_gz.git
     version: 4c1659652e036d141db5d6e43a5f336906546c4c
+
+  andino_oro_rmf:
+    type: git
+    url: https://github.com/pabnas/andino_oro_rmf.git
+    version: 456fe8682af18138c7c51aa4190d703538a27b9c
