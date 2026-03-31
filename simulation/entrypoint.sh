@@ -42,6 +42,7 @@ $HOME/.inorbit/local/install.sh || true
 # Build the workspace and launch the simulation
 colcon build
 source install/setup.bash
-ros2 launch andino_fleet andino.sim.launch.xml
 
 # tail -f /dev/null
+
+ros2 launch andino_fleet andino.sim.launch.xml
