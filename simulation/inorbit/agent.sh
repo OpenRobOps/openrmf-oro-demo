@@ -1,0 +1,4 @@
+export INORBIT_ID=$INORBIT_ID
+export INORBIT_KEY=$INORBIT_LIFTOFF_KEY
+export ROS_DOMAIN_ID=$ROS_DOMAIN_ID
+export INORBIT_URL="http://localhost:3000/"

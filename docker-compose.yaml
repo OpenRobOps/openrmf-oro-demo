@@ -1,0 +1,117 @@
+version: "3.8"
+services:
+  # ==========================================
+  # FLEET PROFILE
+  # ==========================================
+  oro_fleet_adapter:
+    build:
+      context: .
+      dockerfile: ./fleet_adapter/Dockerfile
+      ssh:
+        - default
+    hostname: oro_fleet_adapter
+    container_name: oro_fleet_adapter
+    network_mode: host
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./maps/:/home/developer/ws/src/maps/:rw
+    tty: true
+    stdin_open: true
+    privileged: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu, graphics, display]
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_QPA_PLATFORM=xcb
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - ROS_DOMAIN_ID=0
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
+      - CYCLONEDDS_URI=<CycloneDDS><Domain><Discovery><ParticipantIndex>auto</ParticipantIndex><MaxAutoParticipantIndex>200</MaxAutoParticipantIndex></Discovery><SharedMemory><Enable>false</Enable></SharedMemory></Domain></CycloneDDS>
+
+
+  api_server:
+    image: ghcr.io/open-rmf/rmf-web/api-server:jazzy-nightly
+    hostname: open_rmf_api_server
+    container_name: open_rmf_api_server
+    network_mode: host
+    ports:
+      - "8000:8000" # RMF_SERVER_URL
+      - "8006:8006" # TRAJECTORY_SERVER_URL
+    environment:
+      - ROS_DOMAIN_ID=0
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+    tty: true
+    stdin_open: true
+  
+  dashboard:
+    image: ghcr.io/open-rmf/rmf-web/demo-dashboard:jazzy-nightly
+    hostname: open_rmf_dashboard
+    container_name: open_rmf_dashboard
+    network_mode: host
+    ports:
+      - "3011:3000" # Dashboard URL
+    environment:
+      - RMF_SERVER_URL=http://localhost:8000
+      - TRAJECTORY_SERVER_URL=ws://localhost:8006
+    tty: true
+    stdin_open: true
+
+  # ==========================================
+  # ROBOT PROFILE
+  # ==========================================
+  robot_service:
+    profiles: ["robot"]
+    build:
+      context: .
+      dockerfile: ./simulation/Dockerfile 
+    image: andino_inorbit_rmf
+    hostname: andino_robot
+    container_name: andino_robot
+    network_mode: host
+    volumes:
+      - ./simulation/inorbit:${HOME}/.inorbit/local/:rw
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    tty: true
+    stdin_open: true
+    privileged: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu, graphics, display]
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_QPA_PLATFORM=xcb
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+
+      - ROS_DOMAIN_ID=1
+      - INORBIT_LIFTOFF_KEY=${INORBIT_LIFTOFF_KEY}
+      - INORBIT_ID=620918333
+
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
+      - CYCLONEDDS_URI=<CycloneDDS><Domain><Discovery><ParticipantIndex>auto</ParticipantIndex><MaxAutoParticipantIndex>200</MaxAutoParticipantIndex></Discovery><SharedMemory><Enable>false</Enable></SharedMemory></Domain></CycloneDDS>
+
+  # ==========================================
+  # MOCK PROFILE
+  # ==========================================
+  mock_api:
+    profiles: ["mock"]
+    image: mockoon/cli:latest
+    container_name: robots-mock-api
+    ports:
+      - "3010:3000"
+    environment:
+      - TZ=America/Bogota
+    restart: unless-stopped
+    volumes:
+      - ../mock_api_server/mock.json:/data/mock.json:ro
+    command: ["-d", "/data/mock.json", "-p", "3000"]

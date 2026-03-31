@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Check if the first argument is exactly the word "place"
+if [ "$1" == "place" ]; then
+  # Assign the second argument to our variable
+  place_value=$2
+
+  # Safety check: make sure the second argument isn't empty
+  if [ -z "$place_value" ]; then
+    echo "Error: You specified 'place' but didn't provide a value."
+    echo "Usage: ~/.inorbit/local/user_scripts/test place <value>"
+    exit 1
+  fi
+
+  echo "Delaying for 10 seconds..."
+  sleep 10
+
+  echo "Success! The script executed properly. The place is: $place_value"
+
+else
+  # If the first argument ISN'T "place", show an error
+  echo "Error: Invalid or missing parameter."
+  echo "Usage: ~/.inorbit/local/user_scripts/test place <value>"
+  exit 1
+fi

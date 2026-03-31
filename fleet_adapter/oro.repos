@@ -1,0 +1,5 @@
+repositories:
+  oro_fleet_adapter:
+    type: git
+    url: git@github.com:OpenRobOps/openrmf-oro-adapter.git
+    version: jazzy-dev

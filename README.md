@@ -1,85 +1,48 @@
-# oro_fleet_adapter
+# Demo ORO Fleet Adapter Package
 
-The objective of this package is to serve as a reference or template for writing a python based `full_control` RMF fleet adapter.
+The objective of this repository is to provide a reference implementation of a fleet adapter that connects a fleet of robots to the OpenRMF ecosystem and the Inorbit fleet management platform. The package `oro_fleet_adapter` contains a generic fleet adapter implementation that can be configured to work with different types of robots and navigation graphs. The package also contains a pre-configured setup for an `Andino` robot operating in a `office` Gazebo simulation environment.
 
-> Note: The implementation in this package is not the only way to write a `full_control` fleet adapter. It is only one such example that may be helpful for users to quickly integrate their fleets with RMF.
+## Step 1: Create env file
+Before building the package, it is important to create an `.env` file in the root of the repository and fill in the required parameters. You can use the provided `env_template` file as a template for creating your own `.env` file.
 
-## Step 1: Update config.yaml
-The `config.yaml` file contains important parameters for setting up the fleet adapter. There are three broad sections to this file:
+## Step 1.1: Configure the simulation environment (optional)
 
-1. **rmf_fleet** : containing parameters that describe the robots in this fleet
-2. **robots** : containing configurations for each robot that will be controlled by this fleet adapter
-3. **reference_coordinates**: containing two sets of [x,y] coordinates that correspond to the same locations but recorded in RMF (`traffic_editor`) and robot specific coordinates frames respectively. These are required to estimate coordinate transformations from one frame to another. A minimum of 4 matching waypoints is recommended.
+Check the file `simulation/README.md` for instructions on how to configure the simulation environment.
 
-> Note: This fleet adapter uses the `nudged` python library to compute transformations from RMF to Robot frame and vice versa. If the user is aware of the `scale`, `rotation` and `translation` values for each transform, they may modify the code in `fleet_adapter.py` to directly create the `nudged` transform objects from these values.
+## Step 2: Build Docker files
 
-## Step 2: Build the package
-Use the command below to build the package after filling in the code and updating the configuration file.
+Since the package has a lot of dependencies, it is recommended to use the provided Docker files to build the package and run the simulation environment. You can build the docker image using the command below from the root of the repository.
+
+To build the fleet adapter docker image, use the command below from the root of the repository.
 ```bash
-colcon build
-source install/setup.bash
+DOCKER_BUILDKIT=1 docker compose build
 ```
 
-## Step 3: Run the simulation environment
-If you do not have access to a physical fleet of robots, you can use the `andino_fleet` package which provides a Gazebo simulation environment with an `Andino` robot. You can launch the simulation environment using the command below. This will spawn 1 `Andino` robot in the `populated office` Gazebo world, the package `oro_fleet_adapter` has a pre-configured fleet adapter configuration file to work with this setup.
-
+To build the simulation environment docker image, use the command below from the root of the repository.
 ```bash
-ros2 launch oro_fleet_adapter fleet.andino.sim.launch.xml
+./simulation/build.sh
 ```
 
-## Step 3.1: Install the Inorbit agent
-Since the Inorbit is going to act as the fleet manager of an andino robot, it is important to have the agent up and running. You can install the agent using the command below. Once installed, you can start the agent using the command shown below.
+## Step 2: Execute the containers
 
+There is a default profile and a `simulation` profile in the `docker-compose.yaml` file, the default profile is used to run the fleet adapter and the simulation profile is used to run the simulation environment. You can execute the containers using the command below.
 ```bash
-curl -fsSL https://control.inorbit.ai/liftoff/mwZZ50wpoCOh33bM -o /tmp/installer.sh
-sed -i '/Press ENTER to resume installation or CTRL\+C to cancel\./d;/read -r input <\/dev\/tty/d' /tmp/installer.sh
-sh /tmp/installer.sh
+docker compose up -d
 ```
+This will start 3 containers:
+1. `oro_fleet_adapter` (to run the fleet adapter that connects the robots to RMF and the ORO agent)
+2. `open_rmf_api_server` (to run the api server of the RMF backend)
+3. `open_rmf_dashboard` (to run the frontend dashboard of RMF)
 
-**Execute the command below to start the agent, (the agent has to be running after the simulation environment is launched leave this command running on a separate terminal, if the simulation is finished the agent will need to be restarted again so it can refresh the `/tf` topic subscriptions and avoid stale data issues):**
+(optional) If you want to run the simulation environment, you can use the command below to start the simulation container among the fleet and RMF components.
 ```bash
-$HOME/.inorbit/dist/scripts/start.sh
+docker compose --profile robot up -d
 ```
-
-## Step 5: Run the fleet adapter:
-
-Run the command below while passing the paths to the configuration file and navigation graph that this fleet operates on.
-
-The websocket server URI should also be passed as a parameter in this command inorder to publish task statuses to the rest of the RMF entities.
-
+or just run the command below to start only the robot service container if you want to run the simulation environment in a different machine (useful when you want emulate non local connections).
 ```bash
-#minimal required parameters
-ros2 run oro_fleet_adapter fleet_adapter -c CONFIG_FILE -n NAV_GRAPH
-
-#Usage with the websocket uri
-ros2 run oro_fleet_adapter fleet_adapter -c CONFIG_FILE -n NAV_GRAPH -s SERVER_URI
-
-# oro fleet manager has a launch file that can be used to run the fleet adapter with the required parameters, you can use it as shown below
-ros2 launch oro_fleet_adapter fleet.andino.launch.xml
-```
-
-## Sumary
-in order to execute the full simulation environment with the andino robot, you will need to have 3 separate terminals running the following commands:
-1. `ros2 launch oro_fleet_adapter fleet.andino.sim.launch.xml` (to launch the gazebo simulation environment with the andino robot)
-2. `$HOME/.inorbit/dist/scripts/start.sh` (to start the inorbit agent which will be the fleet manager of the andino robot)
-3. `ros2 launch oro_fleet_adapter fleet.andino.launch.xml` (to launch the fleet adapter that will connect the andino robot to RMF and the Inorbit agent)
-
-# Docker
-
-To build the docker image for this package, use the command below from the root of the repository.
-
-```bash
-./docker/build.sh
-```
-
-After building the image, you can use docker compose to run all the necessary services such as:
-- oro_fleet_adapter
-- open_rmf_web (frontend)
-- open_rmf_server (backend)
-- mock_api_server (to simulate the Inorbit api responses)
-
-```bash
-docker compose -f docker/docker-compose.yaml up -d
+docker compose up robot_service
 ```
 
 And open a web browser and navigate to `http://localhost:3000/robots` to access the RMF web interface and see the robot in action.
+
+<img width="2544" height="900" alt="image" src="https://github.com/user-attachments/assets/658fc6f9-3f70-42e6-b742-c79015159ba4" />
