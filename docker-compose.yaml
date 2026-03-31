@@ -6,7 +6,7 @@ services:
   oro_fleet_adapter:
     build:
       context: .
-      dockerfile: ./fleet/Dockerfile
+      dockerfile: ./fleet_adapter/Dockerfile
       ssh:
         - default
     hostname: oro_fleet_adapter

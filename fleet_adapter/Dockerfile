@@ -49,7 +49,7 @@ ENV WS=${HOME}/ws
 RUN mkdir -p "${WS}/src" \
  && chown -R "${USER}:${USER}" "${HOME}"
 
-COPY --chown=${USER}:${USER} fleet/oro.repos ${WS}/oro.repos
+COPY --chown=${USER}:${USER} fleet_adapter/oro.repos ${WS}/oro.repos
 
 RUN --mount=type=ssh,required=true \
     mkdir -p "${WS}/src" /root/.ssh \
@@ -77,7 +77,7 @@ RUN source /opt/ros/${ROS_DISTRO}/setup.bash \
  && source /rmf_demos_ws/install/setup.bash \
  && colcon build --symlink-install
 
-COPY fleet/entrypoint.sh /entrypoint.sh
+COPY fleet_adapter/entrypoint.sh /entrypoint.sh
 
 USER root
 RUN chmod +x /entrypoint.sh
