@@ -2,9 +2,9 @@ repositories:
   andino:
     type: git
     url: https://github.com/Ekumen-OS/andino.git
-    version: main
+    version: 252379466885c200cc483b4de512652006a73401
   
   andino_gz:
     type: git
     url: https://github.com/daniel-lopez-puig/andino_gz.git
-    version: jazzy
+    version: 4c1659652e036d141db5d6e43a5f336906546c4c

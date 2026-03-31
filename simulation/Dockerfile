@@ -75,8 +75,7 @@ WORKDIR /home/${USER}/ws/andino_ws
 
 COPY simulation/andino.repos /home/${USER}/ws/andino_ws/andino.repos
 
-RUN vcs validate < andino.repos \
- && vcs import src < andino.repos
+RUN mkdir -p src && vcs import src < andino.repos
 
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash \
  && source /rmf_demos_ws/install/setup.bash \
