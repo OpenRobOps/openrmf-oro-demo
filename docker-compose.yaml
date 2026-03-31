@@ -40,6 +40,9 @@ services:
     hostname: open_rmf_api_server
     container_name: open_rmf_api_server
     network_mode: host
+    ports:
+      - "8000:8000" # RMF_SERVER_URL
+      - "8006:8006" # TRAJECTORY_SERVER_URL
     environment:
       - ROS_DOMAIN_ID=0
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
@@ -51,6 +54,8 @@ services:
     hostname: open_rmf_dashboard
     container_name: open_rmf_dashboard
     network_mode: host
+    ports:
+      - "3011:3000" # Dashboard URL
     environment:
       - RMF_SERVER_URL=http://localhost:8000
       - TRAJECTORY_SERVER_URL=ws://localhost:8006
@@ -104,7 +109,7 @@ services:
     image: mockoon/cli:latest
     container_name: robots-mock-api
     ports:
-      - "3001:3000"
+      - "3010:3000"
     environment:
       - TZ=America/Bogota
     restart: unless-stopped
