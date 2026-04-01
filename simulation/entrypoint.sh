@@ -45,4 +45,7 @@ source install/setup.bash
 
 # tail -f /dev/null
 
+# Run the InOrbit agent and the simulation in parallel
+$HOME/.inorbit/local/run.sh
+
 ros2 launch andino_fleet andino.sim.launch.xml

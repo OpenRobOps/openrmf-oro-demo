@@ -93,9 +93,10 @@ services:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=all
 
-      - ROS_DOMAIN_ID=1
+      - ROS_DOMAIN_ID=${INORBIT_ROS_DOMAIN_ID}
       - INORBIT_LIFTOFF_KEY=${INORBIT_LIFTOFF_KEY}
-      - INORBIT_ID=620918333
+      - INORBIT_URL=${INORBIT_URL}
+      - INORBIT_ID=${INORBIT_ROBOT_ID}
 
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
       - CYCLONEDDS_URI=<CycloneDDS><Domain><Discovery><ParticipantIndex>auto</ParticipantIndex><MaxAutoParticipantIndex>200</MaxAutoParticipantIndex></Discovery><SharedMemory><Enable>false</Enable></SharedMemory></Domain></CycloneDDS>

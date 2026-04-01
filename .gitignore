@@ -208,6 +208,7 @@ simulation/inorbit/*
 simulation/!inorbit/inorbit.service
 simulation/!inorbit/agent.sh
 simulation/!inorbit/install.sh
+simulation/!inorbit/run.sh
 simulation/!inorbit/user_scripts/
 commands.txt
 
