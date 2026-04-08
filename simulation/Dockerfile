@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     vim \
  && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --break-system-packages nudged
+RUN pip install --break-system-packages nudged inorbit-cli
 
 RUN if [ ! -f /etc/ros/rosdep/sources.list.d/20-default.list ]; then \
       rosdep init; \
@@ -104,6 +104,9 @@ ARG USER=developer
 SHELL ["/bin/bash", "-c"]
 
 WORKDIR /home/${USER}/ws
+
+RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc \
+ && source ~/.bashrc
 
 COPY simulation/entrypoint.sh /entrypoint.sh
 RUN sudo chmod +x /entrypoint.sh

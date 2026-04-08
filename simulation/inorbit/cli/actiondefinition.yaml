@@ -1,0 +1,43 @@
+apiVersion: v0.1
+kind: ActionDefinition
+metadata:
+  id: PublishToTopic-vq8S-J
+  scope: account/4QPn5zusDQJtnrdaB
+spec:
+  arguments:
+  - name: message
+    type: string
+    value: Hello from InOrbit. My memory usage is {{ram}}
+  - input:
+      control: text
+    name: ram
+    type: string
+    value: text
+  confirmation:
+    required: true
+  description: ''
+  group: Other
+  label: Test
+  lock: false
+  type: PublishToTopic
+---
+apiVersion: v0.1
+kind: ActionDefinition
+metadata:
+  id: RunScript-RJWpbc
+  scope: account/4QPn5zusDQJtnrdaB
+spec:
+  arguments:
+  - name: filename
+    type: string
+    value: test
+  - name: place
+    type: string
+    value: test_inorbit
+  confirmation:
+    required: false
+  description: Test script
+  group: Other
+  label: Run a user script
+  lock: false
+  type: RunScript

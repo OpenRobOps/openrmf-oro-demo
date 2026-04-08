@@ -97,6 +97,8 @@ services:
       - INORBIT_LIFTOFF_KEY=${INORBIT_LIFTOFF_KEY}
       - INORBIT_URL=${INORBIT_URL}
       - INORBIT_ID=${INORBIT_ROBOT_ID}
+      - INORBIT_CLI_API_KEY=${INORBIT_CLI_API_KEY}
+      - INORBIT_CLI_URL=${INORBIT_CLI_URL}
 
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
       - CYCLONEDDS_URI=<CycloneDDS><Domain><Discovery><ParticipantIndex>auto</ParticipantIndex><MaxAutoParticipantIndex>200</MaxAutoParticipantIndex></Discovery><SharedMemory><Enable>false</Enable></SharedMemory></Domain></CycloneDDS>

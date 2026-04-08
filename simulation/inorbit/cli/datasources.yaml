@@ -1,0 +1,36 @@
+apiVersion: v0.1
+kind: DataSourceDefinition
+metadata:
+  id: rosDiagnosticsStatus
+  scope: account/4QPn5zusDQJtnrdaB
+spec: null
+---
+apiVersion: v0.1
+kind: DataSourceDefinition
+metadata:
+  id: evwkT2VZ9LLP1-bc
+  scope: account/4QPn5zusDQJtnrdaB
+spec:
+  label: Battery
+  source:
+    keyValue:
+      key: battery
+  timeline: {}
+---
+apiVersion: v0.1
+kind: DataSourceDefinition
+metadata:
+  id: lnj1qZd-LWU9CGmf
+  scope: account/4QPn5zusDQJtnrdaB
+spec: null
+---
+apiVersion: v0.1
+kind: DataSourceDefinition
+metadata:
+  id: rosMasterStatus
+  scope: account/4QPn5zusDQJtnrdaB
+spec:
+  label: Map Label
+  source:
+    keyValue:
+      key: map_label
