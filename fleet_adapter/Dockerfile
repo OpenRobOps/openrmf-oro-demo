@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.4
 ARG ROS_DISTRO=jazzy
 
-FROM ghcr.io/open-rmf/rmf/rmf_demos:${ROS_DISTRO}-rmf-latest AS andino_slam
+FROM ghcr.io/open-rmf/rmf/rmf_demos:${ROS_DISTRO}-rmf-latest AS builder
 
 ARG ROS_DISTRO=jazzy
 ARG USER=developer

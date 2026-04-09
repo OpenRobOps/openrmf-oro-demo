@@ -1,0 +1,5 @@
+repositories:
+  .:
+    type: git
+    url: https://github.com/pabnas/rmf-web.git
+    version: 8721fc966d9c082c79d3cb772153454a33e6ca3e
