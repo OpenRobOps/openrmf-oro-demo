@@ -46,6 +46,9 @@ services:
     environment:
       - ROS_DOMAIN_ID=0
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - RMF_API_SERVER_CONFIG=/app/config.py
+    volumes:
+      - ./rmf_api_server/config.py:/app/config.py:ro
     tty: true
     stdin_open: true
   
