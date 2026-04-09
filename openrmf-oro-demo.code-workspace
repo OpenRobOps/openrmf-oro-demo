@@ -1,0 +1,180 @@
+{
+    "folders": [
+        {
+            "path": "."
+        },
+        {
+            "path": "../openrmf-oro-adapter"
+        },
+        {
+            "path": "../oro"
+        }
+    ],
+    "settings": {},
+    "tasks": {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "Terminal 1: MQTT",
+                "type": "shell",
+                "command": "docker compose up",
+                "isBackground": true,
+                "options": {
+                    "cwd": "${workspaceFolder:oro}/mqtt"
+                },
+                "presentation": {
+                    "panel": "new",
+                    "group": "oro-services",
+                    "clear": true
+                },
+                "problemMatcher": {
+                    "pattern": { "regexp": "^$" },
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^.*$",
+                        "endsPattern": "^.*$"
+                    }
+                }
+            },
+            {
+                "label": "Terminal 2: Web App",
+                "type": "shell",
+                "command": "./run.sh",
+                "isBackground": true,
+                "options": {
+                    "cwd": "${workspaceFolder:oro}/web/app"
+                },
+                "presentation": {
+                    "panel": "new",
+                    "group": "oro-services",
+                    "clear": true
+                },
+                "problemMatcher": {
+                    "pattern": { "regexp": "^$" },
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^.*$",
+                        "endsPattern": "^.*$"
+                    }
+                }
+            },
+            {
+                "label": "Terminal 3: Ingest",
+                "type": "shell",
+                "command": "./run.sh",
+                "isBackground": true,
+                "options": {
+                    "cwd": "${workspaceFolder:oro}/ingest"
+                },
+                "presentation": {
+                    "panel": "new",
+                    "group": "oro-services",
+                    "clear": true
+                },
+                "problemMatcher": {
+                    "pattern": { "regexp": "^$" },
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^.*$",
+                        "endsPattern": "^.*$"
+                    }
+                }
+            },
+            {
+                "label": "🚀 Start All ORO Services",
+                "dependsOn": [
+                    "Terminal 1: MQTT",
+                    "Terminal 2: Web App",
+                    "Terminal 3: Ingest"
+                ],
+                "dependsOrder": "parallel",
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                }
+            },
+            {
+                "label": "Terminal 4: Docker Build",
+                "type": "shell",
+                "command": "DOCKER_BUILDKIT=1 docker compose build",
+                "isBackground": true,
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                },
+                "presentation": {
+                    "panel": "new",
+                    "group": "docker-build",
+                    "clear": true
+                },
+                "problemMatcher": {
+                    "pattern": { "regexp": "^$" },
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^.*$",
+                        "endsPattern": "^.*$"
+                    }
+                }
+            },
+            {
+                "label": "Terminal 5: Simulation Build",
+                "type": "shell",
+                "command": "./simulation/build.sh",
+                "isBackground": true,
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                },
+                "presentation": {
+                    "panel": "new",
+                    "group": "docker-build",
+                    "clear": true
+                },
+                "problemMatcher": {
+                    "pattern": { "regexp": "^$" },
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^.*$",
+                        "endsPattern": "^.*$"
+                    }
+                }
+            },
+            {
+                "label": "🚀 Build Docker Services",
+                "dependsOn": [
+                    "Terminal 4: Docker Build",
+                    "Terminal 5: Simulation Build"
+                ],
+                "dependsOrder": "parallel",
+                "group": "build"
+            }
+        ]
+    },
+    "launch": {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "▶️ Run All ORO Services",
+                "type": "node",
+                "request": "launch",
+                "preLaunchTask": "🚀 Start All ORO Services",
+                "runtimeExecutable": "node",
+                "runtimeArgs": [
+                    "-e",
+                    "console.log('All 3 terminals have been launched successfully!');"
+                ],
+                "console": "internalConsole"
+            },
+            {
+                "name": "▶️ Build Docker & Simulation",
+                "type": "node",
+                "request": "launch",
+                "preLaunchTask": "🚀 Build Docker Services",
+                "runtimeExecutable": "node",
+                "runtimeArgs": [
+                    "-e",
+                    "console.log('Docker and Simulation build terminals launched successfully!');"
+                ],
+                "console": "internalConsole"
+            }
+        ]
+    }
+}
