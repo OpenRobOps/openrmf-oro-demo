@@ -2,4 +2,4 @@ repositories:
   oro_fleet_adapter:
     type: git
     url: git@github.com:OpenRobOps/openrmf-oro-adapter.git
-    version: d3b176245c8084189e3f303a5189b920c0dc50f2
+    version: 388f02464f9f98638358b302b27083e068145f58

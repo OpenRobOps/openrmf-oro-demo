@@ -1,23 +1,18 @@
 apiVersion: v0.1
 kind: ActionDefinition
 metadata:
-  id: PublishToTopic-vq8S-J
+  id: PublishToTopic-ZF-7Ib
   scope: account/4QPn5zusDQJtnrdaB
 spec:
   arguments:
   - name: message
     type: string
-    value: Hello from InOrbit. My memory usage is {{ram}}
-  - input:
-      control: text
-    name: ram
-    type: string
-    value: text
+    value: Hello from InOrbit. This is a test message.
   confirmation:
     required: true
   description: ''
   group: Other
-  label: Test
+  label: Publish ROS topic
   lock: false
   type: PublishToTopic
 ---
