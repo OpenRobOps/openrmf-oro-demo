@@ -145,6 +145,111 @@
                 ],
                 "dependsOrder": "parallel",
                 "group": "build"
+            },
+            {
+                "label": "Terminal 6: Web App NPM",
+                "type": "shell",
+                "command": "npm install",
+                "isBackground": true,
+                "options": {
+                    "cwd": "${workspaceFolder:oro}/web/app"
+                },
+                "presentation": {
+                    "panel": "new",
+                    "group": "update-oro-deps",
+                    "clear": true
+                },
+                "problemMatcher": {
+                    "pattern": { "regexp": "^$" },
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^.*$",
+                        "endsPattern": "^.*$"
+                    }
+                }
+            },
+            {
+                "label": "Terminal 7: Ingest NPM",
+                "type": "shell",
+                "command": "npm install",
+                "isBackground": true,
+                "options": {
+                    "cwd": "${workspaceFolder:oro}/ingest"
+                },
+                "presentation": {
+                    "panel": "new",
+                    "group": "update-oro-deps",
+                    "clear": true
+                },
+                "problemMatcher": {
+                    "pattern": { "regexp": "^$" },
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^.*$",
+                        "endsPattern": "^.*$"
+                    }
+                }
+            },
+            {
+                "label": "Terminal 8: MQTT Docker Build",
+                "type": "shell",
+                "command": "docker compose build",
+                "isBackground": true,
+                "options": {
+                    "cwd": "${workspaceFolder:oro}/mqtt"
+                },
+                "presentation": {
+                    "panel": "new",
+                    "group": "update-oro-deps",
+                    "clear": true
+                },
+                "problemMatcher": {
+                    "pattern": { "regexp": "^$" },
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^.*$",
+                        "endsPattern": "^.*$"
+                    }
+                }
+            },
+            {
+                "label": "🚀 Update ORO npm deps",
+                "dependsOn": [
+                    "Terminal 6: Web App NPM",
+                    "Terminal 7: Ingest NPM",
+                    "Terminal 8: MQTT Docker Build"
+                ],
+                "dependsOrder": "parallel",
+                "group": "build"
+            },
+            {
+                "label": "Terminal 9: Fleet Adapter",
+                "type": "shell",
+                "command": "docker compose up -d",
+                "isBackground": true,
+                "options": {
+                    "cwd": "${workspaceFolder}/openrmf-oro-demo"
+                },
+                "presentation": {
+                    "panel": "new",
+                    "group": "fleet-adapter",
+                    "clear": true
+                },
+                "problemMatcher": {
+                    "pattern": { "regexp": "^$" },
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^.*$",
+                        "endsPattern": "^.*$"
+                    }
+                }
+            },
+            {
+                "label": "🚀 Launch Fleet Adapter",
+                "dependsOn": [
+                    "Terminal 9: Fleet Adapter"
+                ],
+                "group": "build"
             }
         ]
     },
@@ -164,6 +269,18 @@
                 "console": "internalConsole"
             },
             {
+                "name": "▶️ Update ORO npm deps",
+                "type": "node",
+                "request": "launch",
+                "preLaunchTask": "🚀 Update ORO npm deps",
+                "runtimeExecutable": "node",
+                "runtimeArgs": [
+                    "-e",
+                    "console.log('ORO dependencies terminals launched successfully!');"
+                ],
+                "console": "internalConsole"
+            },
+            {
                 "name": "▶️ Build Docker & Simulation",
                 "type": "node",
                 "request": "launch",
@@ -172,6 +289,18 @@
                 "runtimeArgs": [
                     "-e",
                     "console.log('Docker and Simulation build terminals launched successfully!');"
+                ],
+                "console": "internalConsole"
+            },
+            {
+                "name": "▶️ Launch Fleet Adapter",
+                "type": "node",
+                "request": "launch",
+                "preLaunchTask": "🚀 Launch Fleet Adapter",
+                "runtimeExecutable": "node",
+                "runtimeArgs": [
+                    "-e",
+                    "console.log('Fleet adapter terminal launched successfully!');"
                 ],
                 "console": "internalConsole"
             }
