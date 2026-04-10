@@ -12,4 +12,4 @@ repositories:
   andino_oro_rmf:
     type: git
     url: https://github.com/pabnas/andino_oro_rmf.git
-    version: 456fe8682af18138c7c51aa4190d703538a27b9c
+    version: 7143e4dd1d2dcabc8c42cb7b03f9aeae82cb8239

@@ -51,4 +51,5 @@ $HOME/.inorbit/local/run.sh
 # Install all Inorbit CLI configuration
 $HOME/.inorbit/local/cli/apply_config_cli.sh
 
-ros2 launch andino_fleet andino.sim.launch.xml
+# use env variable to decide whether to launch rviz or not
+ros2 launch andino_fleet andino.sim.launch.xml id:=${ANDINO_ID:-1} rviz:=${RVIZ:-false} battery_level:=${BATTERY_LEVEL:-1.0}

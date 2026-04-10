@@ -66,47 +66,6 @@ services:
     stdin_open: true
 
   # ==========================================
-  # ROBOT PROFILE
-  # ==========================================
-  robot_service:
-    profiles: ["robot"]
-    build:
-      context: .
-      dockerfile: ./simulation/Dockerfile 
-    image: andino_inorbit_rmf
-    hostname: andino_robot
-    container_name: andino_robot
-    network_mode: host
-    volumes:
-      - ./simulation/inorbit:${HOME}/.inorbit/local/:rw
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw
-    tty: true
-    stdin_open: true
-    privileged: true
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu, graphics, display]
-    environment:
-      - DISPLAY=${DISPLAY}
-      - QT_QPA_PLATFORM=xcb
-      - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=all
-
-      - ROS_DOMAIN_ID=${INORBIT_ROS_DOMAIN_ID}
-      - INORBIT_LIFTOFF_KEY=${INORBIT_LIFTOFF_KEY}
-      - INORBIT_URL=${INORBIT_URL}
-      - INORBIT_ID=${INORBIT_ROBOT_ID}
-      - INORBIT_CLI_API_KEY=${INORBIT_CLI_API_KEY}
-      - INORBIT_CLI_URL=${INORBIT_CLI_URL}
-
-      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
-      - CYCLONEDDS_URI=<CycloneDDS><Domain><Discovery><ParticipantIndex>auto</ParticipantIndex><MaxAutoParticipantIndex>200</MaxAutoParticipantIndex></Discovery><SharedMemory><Enable>false</Enable></SharedMemory></Domain></CycloneDDS>
-
-  # ==========================================
   # MOCK PROFILE
   # ==========================================
   mock_api:

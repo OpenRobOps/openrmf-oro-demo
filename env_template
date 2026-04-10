@@ -1,8 +1,0 @@
-# Save this file as .env in the root of your project
-INORBIT_LIFTOFF_KEY=ReplaceWithYourOwnKey
-INORBIT_URL=http://localhost:3000/
-INORBIT_ROS_DOMAIN_ID=1
-INORBIT_ROBOT_ID=ReplaceWithYourOwnRobotID
-
-INORBIT_CLI_API_KEY=ReplaceWithYourOwnCLIKey
-INORBIT_CLI_URL=ReplaceWithYourOwnCLIURL

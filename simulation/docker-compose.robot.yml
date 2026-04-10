@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  robot:
+    build:
+      context: .
+      dockerfile: ./Dockerfile 
+    image: andino_inorbit_rmf
+    hostname: ${ROBOT_NAME}
+    container_name: ${ROBOT_NAME}
+    network_mode: host
+    volumes:
+      - ./inorbit:${HOME}/.inorbit/local/:rw
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    tty: true
+    stdin_open: true
+    privileged: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu, graphics, display]
+    env_file:
+      - ./robot_config/${ROBOT_NAME}/config.env
+      - ./common.env
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_QPA_PLATFORM=xcb
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
+      - CYCLONEDDS_URI=<CycloneDDS><Domain><Discovery><ParticipantIndex>auto</ParticipantIndex><MaxAutoParticipantIndex>200</MaxAutoParticipantIndex></Discovery><SharedMemory><Enable>false</Enable></SharedMemory></Domain></CycloneDDS>
