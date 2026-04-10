@@ -1,48 +1,165 @@
-# Demo ORO Fleet Adapter Package
+# OpenRMF–ORO Demo
 
-The objective of this repository is to provide a reference implementation of a fleet adapter that connects a fleet of robots to the OpenRMF ecosystem and the Inorbit fleet management platform. The package `oro_fleet_adapter` contains a generic fleet adapter implementation that can be configured to work with different types of robots and navigation graphs. The package also contains a pre-configured setup for an `Andino` robot operating in a `office` Gazebo simulation environment.
+This repository contains a complete demonstration of integrating an Open-RMF deployment with the ORO (InOrbit-compatible) fleet management platform using an Andino robot fleet. It includes:
 
-## Step 1: Create env file
-Before building the package, it is important to create an `.env` file in the root of the repository and fill in the required parameters. You can use the provided `env_template` file as a template for creating your own `.env` file.
+- A configurable fleet adapter that bridges RMF tasks with ORO robots.
+- An RMF backend (API server + trajectory server) and RMF dashboard.
+- A Docker-based Andino simulation that connects to both RMF and ORO.
 
-## Step 1.1: Configure the simulation environment (optional)
+The goal is to provide an end-to-end example: ORO UI → RMF tasks → simulated Andino robots.
 
-Check the file `simulation/README.md` for instructions on how to configure the simulation environment.
+For more details about the fleet adapter package itself, see the openrmf-oro-adapter repository README:
 
-## Step 2: Build Docker files
+- https://github.com/OpenRobOps/openrmf-oro-adapter/blob/main/README.md
 
-Since the package has a lot of dependencies, it is recommended to use the provided Docker files to build the package and run the simulation environment. You can build the docker image using the command below from the root of the repository.
+That document explains the generic `oro_fleet_adapter` and how it can be configured for different robots and navigation graphs.
 
-To build the fleet adapter docker image, use the command below from the root of the repository.
+## 1. Configuration
+
+### 1.1 Simulation configuration (optional)
+
+If you want to run the Andino Gazebo simulation and connect robots to ORO, follow:
+
+- [simulation/README.md](simulation/README.md)
+
+That README covers:
+
+- Building the Andino simulation image.
+- Creating per-robot `config.env` files (e.g., `andino1`, `andino2`).
+- Setting up shared ORO / InOrbit configuration in `common.env`.
+- Initializing and localizing robots in Gazebo / RViz.
+
+### 1.2 RMF dashboard configuration
+
+The RMF dashboard build and runtime configuration (including how `RMF_SERVER_URL` and `TRAJECTORY_SERVER_URL` are injected) is documented in:
+
+- [rmf_dashboard/README.md](rmf_dashboard/README.md)
+
+You normally do not need to change this for the default demo, but it is useful if you move the RMF services to different hosts.
+
+### 1.4 Fleet adapter configuration and robots
+
+The fleet adapter used here comes from the openrmf-oro-adapter project. The primary documentation is:
+
+- https://github.com/OpenRobOps/openrmf-oro-adapter/blob/main/README.md
+
+For the Andino demo configuration, see:
+
+- https://github.com/OpenRobOps/openrmf-oro-adapter/blob/main/oro_fleet_adapter/demo.andino.config.yaml
+
+In this demo, the fleet adapter is preconfigured to work with two robots: **andino1** and **andino2**. The information in `demo.andino.config.yaml` (or a custom configuration file you create) must be consistent with the robots you bring up in the simulation:
+
+- Robot names and RMF fleet names.
+- Navigation graphs and task parameters.
+- Any ORO / InOrbit identifiers referenced by the adapter.
+
+If you want to add more robots (e.g., `andino3`, `andino4`):
+
+1. Extend the adapter configuration file (either `demo.andino.config.yaml` or your own) to include the additional robots.
+2. Mount that configuration file into the fleet adapter container and update the entrypoint or launch command so the adapter uses your file instead of the default one.
+3. Create matching `robot_config/<robot_name>/config.env` files in the `simulation/` directory (see [simulation/README.md](simulation/README.md)).
+
+## 2. Building the Docker images
+
+From the root of this repository:
+
+1. Build the fleet adapter, RMF API server integration, and RMF dashboard images:
+
 ```bash
 DOCKER_BUILDKIT=1 docker compose build
 ```
 
-To build the simulation environment docker image, use the command below from the root of the repository.
+This will build:
+- `oro_fleet_adapter` – Fleet adapter container.
+- `open_rmf_dashboard` – RMF dashboard served via NGINX.
+
+2. (Optional but recommended) Build the Andino simulation image:
+
 ```bash
 ./simulation/build.sh
 ```
 
-## Step 2: Execute the containers
+Details of the simulation build are in [simulation/README.md](simulation/README.md).
 
-There is a default profile and a `simulation` profile in the `docker-compose.yaml` file, the default profile is used to run the fleet adapter and the simulation profile is used to run the simulation environment. You can execute the containers using the command below.
+## 3. Running the full ORO + RMF stack
+
+Running the full demo involves two pieces:
+
+1. The **ORO platform** (web app, MQTT, ingest, etc.).
+2. The **RMF + fleet adapter stack** from this repository.
+3. The **Andino simulation** with one or more robots if the default fleet adapter is used.
+
+### 3.1 Start the ORO platform
+
+See https://github.com/OpenRobOps/oro/blob/main/README-dev.md for detailed instructions on how to start the ORO services. If you have the ORO repository cloned in the same workspace (typically as `oro/`), you can also use the VS Code task `🚀 Start All ORO Services` to bring up the ORO stack, which starts:
+
+- MQTT broker.
+- ORO web app.
+- ORO ingest service.
+
+Ensure the ORO web UI is reachable on port **3000** before proceeding.
+
+### 3.2 Start the RMF + fleet adapter stack
+
+From this repository root, start the fleet profile:
+
 ```bash
 docker compose up -d
 ```
-This will start 3 containers:
-1. `oro_fleet_adapter` (to run the fleet adapter that connects the robots to RMF and the ORO agent)
-2. `open_rmf_api_server` (to run the api server of the RMF backend)
-3. `open_rmf_dashboard` (to run the frontend dashboard of RMF)
 
-(optional) If you want to run the simulation environment, you can use the command below to start the simulation container among the fleet and RMF components.
+This launches:
+
+1. `oro_fleet_adapter` – Connects RMF tasks with ORO robots.
+2. `open_rmf_api_server` – RMF API and trajectory server backend.
+3. `open_rmf_dashboard` – RMF dashboard web UI.
+4. `robots-mock-api` – Mock ORO API server (currently used as a stand-in for some InOrbit endpoints).
+
+You should now be able to:
+
+- Open the ORO UI at `http://localhost:3000/`.
+- Open the RMF dashboard at `http://localhost:3011/`.
+
+## 4. Starting robots with the simulation
+
+With ORO and the fleet profile running, you can start simulated robots from the `simulation/` directory.
+
+For example, to start **andino1** and **andino2**:
+
 ```bash
-docker compose --profile robot up -d
-```
-or just run the command below to start only the robot service container if you want to run the simulation environment in a different machine (useful when you want emulate non local connections).
-```bash
-docker compose up robot_service
+cd simulation
+./initialize_robot.sh andino1
+./initialize_robot.sh andino2
 ```
 
-And open a web browser and navigate to `http://localhost:3000/robots` to access the RMF web interface and see the robot in action.
+Each script call:
 
-<img width="2544" height="900" alt="image" src="https://github.com/user-attachments/assets/658fc6f9-3f70-42e6-b742-c79015159ba4" />
+- Uses `docker-compose.robot.yml` to bring up a per-robot container.
+- Reads `robot_config/<robot_name>/config.env` and `common.env`.
+- Installs and runs the InOrbit agent and starts Gazebo + RViz for that robot.
+
+Make sure the environment variables (`INORBIT_ID`... etc) align with what is configured in the fleet adapter’s `demo.andino.config.yaml` (or your custom config) so that RMF and ORO recognize the robots correctly.
+
+For information about localization in RViz and multi-robot setups, see [simulation/README.md](simulation/README.md).
+
+## 5. Ports used
+
+The full demo uses the following ports:
+
+- **3000** – ORO dashboard (web UI).
+- **3001** – ORO MQTT broker.
+- **3010** – ORO API mock (Mockoon-based service used as an InOrbit-like API) (only launched with the `mock` profile and used as a testing method).
+- **3011** – RMF dashboard (`open_rmf_dashboard` service).
+- **8000** – RMF API server (`open_rmf_api_server`, used as `RMF_SERVER_URL`).
+- **8006** – RMF trajectory server (WebSocket, used as `TRAJECTORY_SERVER_URL`).
+
+Depending on your ORO deployment, additional ports may also be in use; refer to the ORO repository documentation for those details.
+
+## 6. ROS domain IDs
+
+ROS 2 domains are used to separate communication between the different components:
+
+- **0** – Fleet adapter, RMF API server, RMF dashboard.
+- **10** – `andino1` simulated robot.
+- **11** – `andino2` simulated robot.
+
+Make sure the `ROS_DOMAIN_ID` values in your robot `config.env` files match these defaults or adjust them consistently across the fleet adapter config and the simulation.
