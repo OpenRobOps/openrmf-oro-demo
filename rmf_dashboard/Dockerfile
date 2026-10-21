@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:24.04 AS builder
+FROM docker.io/ubuntu:26.04 AS builder
 
 ENV CI=1
 ENV DEBIAN_FRONTEND=noninteractive
